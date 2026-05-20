@@ -47,11 +47,14 @@ Rust 编译为单个二进制，配合一个 SQLite 文件即可运行，内存�
 
 ## 展示
 
-<!-- TODO: 首页星图截图 -->
+### 首页星图截图
 
-<!-- TODO: 文章阅读截图 -->
+![image](https://github.com/user-attachments/assets/d35fa240-7b18-4637-a278-86975a269864)
 
-<!-- TODO: Cmd+K 搜索截图 -->
+### 文章阅读截图
+
+
+### Cmd+K 搜索截图
 
 ---
 
