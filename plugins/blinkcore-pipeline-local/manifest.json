@@ -1,0 +1,9 @@
+{
+  "id": "blinkcore-pipeline-local",
+  "name": "BlinkCore Pipeline (Local Dev)",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Local dev version — syncs to http://127.0.0.1:8000",
+  "author": "BlinkCore",
+  "isDesktopOnly": true
+}

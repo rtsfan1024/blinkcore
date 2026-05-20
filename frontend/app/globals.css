@@ -1,0 +1,313 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary:   #141b2d;
+  --bg-secondary: #1e2a3a;
+  --text-primary: #e2e8f0;
+  --text-secondary:#94a3b8;
+  --accent:       #60a5fa;
+  --border:       #2d3a4a;
+  --success:      #4ade80;
+  --warning:      #fbbf24;
+  --error:        #f87171;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+    Arial, sans-serif;
+}
+
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", monospace;
+}
+
+@layer components {
+  .article-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  .article-card:hover {
+    border-color: var(--accent);
+    background-color: var(--bg-secondary);
+  }
+
+  .terminal-text {
+    font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", monospace;
+    color: var(--success);
+  }
+}
+
+/* ================================================================ */
+/*  Starfield animations                                             */
+/* ================================================================ */
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes nebula-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(2%, 1%) scale(1.05); }
+  66% { transform: translate(-1%, -1%) scale(0.95); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes hud-scan {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes star-glow {
+  0%, 100% { filter: brightness(1) blur(0px); }
+  50% { filter: brightness(1.5) blur(1px); }
+}
+
+/* ================================================================ */
+/*  Starfleet panel animations                                      */
+/* ================================================================ */
+
+@keyframes radar-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes fleet-float {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-4px); }
+}
+
+@keyframes engine-glow {
+  0%, 100% { opacity: 0.2; transform: scaleX(0.6); }
+  50%      { opacity: 0.9; transform: scaleX(1.6); }
+}
+
+@keyframes engine-glow-wide {
+  0%, 100% { opacity: 0.15; transform: scaleX(0.8) scaleY(1); }
+  50%      { opacity: 0.7;  transform: scaleX(2.0) scaleY(1.2); }
+}
+
+@keyframes ship-drift {
+  0%   { transform: translateX(0px); }
+  25%  { transform: translateX(6px); }
+  75%  { transform: translateX(-4px); }
+  100% { transform: translateX(0px); }
+}
+
+@keyframes data-line {
+  0%   { width: 0; opacity: 0; }
+  20%  { opacity: 0.6; }
+  100% { width: 100%; opacity: 0.15; }
+}
+
+@keyframes blip-ping {
+  0%   { transform: scale(1); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes target-lock {
+  0%   { transform: scale(1); opacity: 0.3; }
+  50%  { transform: scale(1.15); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 0.3; }
+}
+
+@keyframes fadeSlideRight {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Hide scrollbar but keep scrollability */
+@layer utilities {
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ================================================================ */
+/*  Code block styles                                               */
+/* ================================================================ */
+
+.code-block-wrapper {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: #0f1729;
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: #1a2337;
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+}
+
+.code-lang-label {
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", monospace;
+  font-size: 11px;
+  text-transform: lowercase;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  letter-spacing: 0.05em;
+}
+
+.copy-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-family: "Cascadia Code", "Fira Code", monospace;
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.code-block-wrapper:hover .copy-button {
+  opacity: 0.7;
+}
+
+.copy-button:hover {
+  opacity: 1 !important;
+  color: var(--text-primary);
+  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.copy-success {
+  color: var(--success);
+  font-size: 11px;
+}
+
+.code-block-pre {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #e2e8f0;
+}
+
+.code-block-content {
+  display: block;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+/* reduce gap between header and code content */
+.code-block-pre code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+/* ================================================================ */
+/*  Mobile drawer animations                                        */
+/* ================================================================ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-slide-in {
+  animation: slide-in-right 0.25s ease-out;
+}
+
+/* ================================================================ */
+/*  highlight.js theme overrides — Tokyo Night palette              */
+/* ================================================================ */
+
+.hljs {
+  background: transparent !important;
+  color: #c9d1d9;
+}
+
+.hljs-keyword { color: #ff7b72; }       /* red-ish — keywords */
+.hljs-string  { color: #a5d6ff; }       /* light blue — strings */
+.hljs-number  { color: #79c0ff; }       /* blue — numbers */
+.hljs-literal { color: #ff7b72; }       /* red — literals */
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.function_ { color: #d2a8ff; } /* purple — functions/classes */
+.hljs-attr,
+.hljs-attribute { color: #79c0ff; }     /* blue — attributes */
+.hljs-built_in { color: #ffa657; }      /* orange — builtins */
+.hljs-comment  { color: #636d83; }      /* muted gray-blue — comments */
+.hljs-type     { color: #ffa657; }      /* orange — types */
+.hljs-variable,
+.hljs-variable.constant_,
+.hljs-params   { color: #ffa657; }      /* orange — variables */
+.hljs-meta     { color: #636d83; }      /* muted — meta */
+.hljs-selector-tag  { color: #7ee787; } /* green — selectors */
+.hljs-selector-class{ color: #d2a8ff; } /* purple — class selectors */
+.hljs-selector-id   { color: #79c0ff; } /* blue — id selectors */
+.hljs-property      { color: #79c0ff; } /* blue — properties */
+.hljs-regexp        { color: #a5d6ff; } /* light blue — regexp */
+.hljs-deletion      { color: #ffdcd7; background: #3d1114; }
+.hljs-addition      { color: #aff5b4; background: #143d1d; }
+.hljs-section       { color: #d2a8ff; font-weight: bold; }
+.hljs-bullet        { color: #7ee787; }

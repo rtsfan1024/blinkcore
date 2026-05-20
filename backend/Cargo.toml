@@ -1,0 +1,31 @@
+[package]
+name = "blinkcore-server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = { version = "0.7", default-features = false, features = ["json", "tokio", "http1", "query"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "fs", "signal"] }
+rusqlite = { version = "0.31", features = ["bundled", "column_decltype", "load_extension"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+schemars = { version = "0.8", features = ["derive"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid = { version = "1", features = ["v4"] }
+tower-http = { version = "0.5", features = ["cors"] }
+anyhow = "1"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+procfs = "0.16"
+
+[dev-dependencies]
+tempfile = "3"
+tower = { version = "0.4", default-features = false, features = ["util"] }
+
+[profile.release]
+panic = "abort"
+strip = true
+lto = true
+opt-level = "z"
+codegen-units = 1

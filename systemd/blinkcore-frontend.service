@@ -1,0 +1,18 @@
+[Unit]
+Description=BlinkCore Next.js Frontend
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/blinkcore/frontend
+ExecStart=/opt/blinkcore/frontend/node_modules/.bin/next start
+Restart=always
+RestartSec=5
+Environment=NEXT_PUBLIC_API_URL=https://your-domain.com
+Environment=NODE_ENV=production
+Environment=PORT=3000
+MemoryMax=512M
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,18 @@
+[Unit]
+Description=BlinkCore Rust API Server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/blinkcore
+ExecStart=/opt/blinkcore/target/release/blinkcore-server
+Restart=always
+RestartSec=3
+Environment=RUST_LOG=info
+Environment=BLINKCORE_DB_PATH=/opt/blinkcore/blog.db
+MemoryMax=256M
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target

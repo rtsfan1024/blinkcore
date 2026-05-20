@@ -1,0 +1,9 @@
+{
+  "id": "blinkcore-pipeline",
+  "name": "BlinkCore Pipeline",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Sync Obsidian notes to BlinkCore knowledge base — slice markdown, generate embeddings, and publish via API.",
+  "author": "BlinkCore",
+  "isDesktopOnly": true
+}
