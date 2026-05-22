@@ -1,5 +1,6 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 import CodeBlockWrapper from "@/components/CodeBlockWrapper";
@@ -28,6 +29,7 @@ function extractLanguage(className?: string): string {
 export function renderMarkdown(content: string): React.ReactElement {
   return (
     <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeSlug, rehypeHighlight]}
       components={{
         h1: ({ id, children, ...props }) => (
@@ -194,6 +196,47 @@ export function renderMarkdown(content: string): React.ReactElement {
         ),
         hr: (props) => (
           <hr className="my-8 border-[var(--border)]" {...props} />
+        ),
+        table: ({ children, ...props }) => (
+          <div className="my-6 overflow-x-auto">
+            <table
+              className="w-full border-collapse text-sm"
+              {...props}
+            >
+              {children}
+            </table>
+          </div>
+        ),
+        thead: ({ children, ...props }) => (
+          <thead className="border-b-2 border-[var(--border)]" {...props}>
+            {children}
+          </thead>
+        ),
+        tbody: ({ children, ...props }) => (
+          <tbody className="divide-y divide-[var(--border)]" {...props}>
+            {children}
+          </tbody>
+        ),
+        tr: ({ children, ...props }) => (
+          <tr className="border-b border-[var(--border)]" {...props}>
+            {children}
+          </tr>
+        ),
+        th: ({ children, ...props }) => (
+          <th
+            className="px-4 py-3 text-left font-semibold text-[var(--text-primary)] bg-[var(--bg-secondary)]"
+            {...props}
+          >
+            {children}
+          </th>
+        ),
+        td: ({ children, ...props }) => (
+          <td
+            className="px-4 py-3 text-[var(--text-primary)]"
+            {...props}
+          >
+            {children}
+          </td>
         ),
       }}
     >
