@@ -142,9 +142,8 @@ function layoutNode(node: LayoutNode, x: number, y: number): void {
   let childY = y;
 
   for (const child of node.children) {
-    const childSpan = subtreeHeight(child);
-    layoutNode(child, childX, childY + (childSpan - child.height) / 2);
-    childY += childSpan + ROW_GAP_Y;
+    layoutNode(child, childX, childY);
+    childY += subtreeHeight(child) + ROW_GAP_Y;
   }
 }
 
@@ -257,6 +256,18 @@ export function extractHeadingsFromMarkdown(markdown: string): ChunkInfo[] {
       heading_text: text,
       slug_anchor: slugger.slug(text),
     });
+  }
+
+  // Auto-promote headings: if no H1 exists, shift all levels up
+  // so the shallowest heading becomes the root level.
+  if (chunks.length > 0) {
+    const minLevel = Math.min(...chunks.map(c => c.heading_level));
+    if (minLevel > 1) {
+      const shift = minLevel - 1;
+      for (const chunk of chunks) {
+        chunk.heading_level = Math.max(1, chunk.heading_level - shift) as 1|2|3|4|5|6;
+      }
+    }
   }
 
   return chunks;
