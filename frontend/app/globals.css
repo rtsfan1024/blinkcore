@@ -237,6 +237,8 @@ code {
   font-size: 13px;
   line-height: 1.6;
   color: #e2e8f0;
+  flex: 1;
+  min-width: 0;
 }
 
 .code-block-content {
@@ -319,6 +321,7 @@ code {
 .code-block-body {
   display: flex;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .code-line-numbers {
@@ -336,17 +339,13 @@ code {
 
 .code-line-number {
   font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", monospace;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--text-secondary);
   opacity: 0.35;
   min-width: 2ch;
 }
 
-.code-block-pre {
-  flex: 1;
-  min-width: 0;
-}
 
 /* ================================================================ */
 /*  Heading anchor links                                              */
