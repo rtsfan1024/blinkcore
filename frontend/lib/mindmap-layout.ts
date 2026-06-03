@@ -15,6 +15,102 @@
 
 import BananaSlug from "github-slugger";
 
+/* ------------------------------------------------------------------ */
+/*  LaTeX helper: strip/convert LaTeX in heading text for mindmap     */
+/* ------------------------------------------------------------------ */
+
+/** Map common LaTeX commands to Unicode equivalents. */
+const LATEX_UNICODE_MAP: Record<string, string> = {
+  "\\rightarrow": "→",
+  "\\leftarrow": "←",
+  "\\Rightarrow": "⇒",
+  "\\Leftarrow": "⇐",
+  "\\leftrightarrow": "↔",
+  "\\alpha": "α",
+  "\\beta": "β",
+  "\\gamma": "γ",
+  "\\delta": "δ",
+  "\\epsilon": "ε",
+  "\\theta": "θ",
+  "\\lambda": "λ",
+  "\\mu": "μ",
+  "\\pi": "π",
+  "\\sigma": "σ",
+  "\\omega": "ω",
+  "\\phi": "φ",
+  "\\psi": "ψ",
+  "\\infty": "∞",
+  "\\sum": "∑",
+  "\\prod": "∏",
+  "\\int": "∫",
+  "\\partial": "∂",
+  "\\nabla": "∇",
+  "\\times": "×",
+  "\\cdot": "·",
+  "\\pm": "±",
+  "\\leq": "≤",
+  "\\geq": "≥",
+  "\\neq": "≠",
+  "\\approx": "≈",
+  "\\equiv": "≡",
+  "\\subset": "⊂",
+  "\\supset": "⊃",
+  "\\in": "∈",
+  "\\notin": "∉",
+  "\\forall": "∀",
+  "\\exists": "∃",
+  "\\neg": "¬",
+  "\\land": "∧",
+  "\\lor": "∨",
+  "\\cup": "∪",
+  "\\cap": "∩",
+  "\\emptyset": "∅",
+  "\\sqrt": "√",
+  "\\ldots": "…",
+  "\\cdots": "⋯",
+  "\\quad": " ",
+  "\\qquad": "  ",
+  "\\text": "",
+  "\\mathrm": "",
+  "\\mathbf": "",
+  "\\mathit": "",
+  "\\mathcal": "",
+  "\\mathbb": "",
+  "\\frac": "",
+  "\\overset": "",
+  "\\underset": "",
+  "\\\\": " ",
+};
+
+/**
+ * Strip LaTeX delimiters from heading text and convert known commands
+ * to Unicode. Keeps the text readable in the mindmap.
+ */
+function stripLatex(text: string): string {
+  // Replace $$...$$ (block math) first, then $...$ (inline math)
+  let result = text.replace(/\$\$([^$]+?)\$\$/g, (_, expr) => convertLatex(expr));
+  result = result.replace(/\$([^$]+?)\$/g, (_, expr) => convertLatex(expr));
+  return result;
+}
+
+/** Convert a LaTeX expression body to plain text. */
+function convertLatex(expr: string): string {
+  let s = expr.trim();
+  // Remove braces: {x} → x, but keep nested content
+  s = s.replace(/\{([^{}]+)\}/g, "$1");
+  s = s.replace(/[{}]/g, "");
+  // Replace known commands
+  for (const [cmd, unicode] of Object.entries(LATEX_UNICODE_MAP)) {
+    s = s.replaceAll(cmd, unicode);
+  }
+  // Remove remaining backslash commands (e.g. \mathbb{R} → R)
+  s = s.replace(/\\[a-zA-Z]+/g, "");
+  // Clean up extra spaces
+  s = s.replace(/\s+/g, " ").trim();
+  return s || expr.trim();
+}
+
+
 export interface ChunkInfo {
   chunk_index: number;
   heading_level: 1 | 2 | 3 | 4 | 5 | 6;
@@ -253,7 +349,7 @@ export function extractHeadingsFromMarkdown(markdown: string): ChunkInfo[] {
     chunks.push({
       chunk_index: chunkIndex++,
       heading_level: level,
-      heading_text: text,
+      heading_text: stripLatex(text),
       slug_anchor: slugger.slug(text),
     });
   }
