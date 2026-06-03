@@ -9,17 +9,26 @@ import { ArticleContent } from "@/components/ArticleContent";
 import { useScrollSync } from "@/hooks/useScrollSync";
 import { extractHeadingsFromMarkdown } from "@/lib/mindmap-layout";
 
+interface NavArticle {
+  slug: string;
+  title: string;
+}
+
 interface ArticlePageClientProps {
   slug: string;
   createdAt: string;
   /** Raw markdown used to render content and extract headings for the mindmap. */
   rawContent: string;
+  prevArticle?: NavArticle | null;
+  nextArticle?: NavArticle | null;
 }
 
 export default function ArticlePageClient({
   slug,
   createdAt,
   rawContent,
+  prevArticle,
+  nextArticle,
 }: ArticlePageClientProps) {
   const articlePaneRef = useRef<HTMLDivElement>(null);
   const svgContainerRef = useRef<HTMLDivElement>(null);
@@ -159,7 +168,7 @@ export default function ArticlePageClient({
         />
         {showPercent && (
           <span
-            className="absolute -top-7 right-0 rounded bg-[#1a2332] px-2 py-0.5 text-xs text-[#e6edf3] shadow-lg"
+            className="absolute top-1 right-0 rounded bg-[#1a2332] px-2 py-0.5 text-xs text-[#e6edf3] shadow-lg"
             style={{ fontFamily: "'Cascadia Code', monospace" }}
           >
             {Math.round(readProgress * 100)}%
@@ -175,7 +184,37 @@ export default function ArticlePageClient({
         <ArticlePane ref={articlePaneRef}>
           <ArticleContent rawContent={rawContent} />
 
-          <footer className="mt-16 border-t border-[var(--border)] pt-4 text-xs text-[var(--text-secondary)]">
+          {/* Prev / Next navigation */}
+          <nav className="mt-12 mb-8 flex items-stretch gap-4">
+            {prevArticle ? (
+              <Link
+                href={`/articles/${prevArticle.slug}`}
+                className="group flex-1 rounded-lg border border-[var(--border)] p-4 transition-colors hover:border-[var(--accent)] hover:bg-[var(--bg-secondary)]"
+              >
+                <span className="block text-xs text-[var(--text-secondary)] mb-1">← 上一篇</span>
+                <span className="block text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent)] line-clamp-2">
+                  {prevArticle.title}
+                </span>
+              </Link>
+            ) : (
+              <div className="flex-1" />
+            )}
+            {nextArticle ? (
+              <Link
+                href={`/articles/${nextArticle.slug}`}
+                className="group flex-1 rounded-lg border border-[var(--border)] p-4 text-right transition-colors hover:border-[var(--accent)] hover:bg-[var(--bg-secondary)]"
+              >
+                <span className="block text-xs text-[var(--text-secondary)] mb-1">下一篇 →</span>
+                <span className="block text-sm font-medium text-[var(--text-primary)] group-hover:text-[var(--accent)] line-clamp-2">
+                  {nextArticle.title}
+                </span>
+              </Link>
+            ) : (
+              <div className="flex-1" />
+            )}
+          </nav>
+
+          <footer className="mt-8 border-t border-[var(--border)] pt-4 text-xs text-[var(--text-secondary)]">
             slug: {slug} · created:{" "}
             {new Date(createdAt).toLocaleDateString("zh-CN")}
           </footer>

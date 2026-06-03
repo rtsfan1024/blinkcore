@@ -1,8 +1,13 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
+import rehypeKatex from "rehype-katex";
+import mediumZoom from "medium-zoom";
 import CodeBlockWrapper from "@/components/CodeBlockWrapper";
 import MermaidBlock from "@/components/MermaidBlock";
 
@@ -25,71 +30,132 @@ function extractLanguage(className?: string): string {
   return match?.[1] ?? "code";
 }
 
+/* ------------------------------------------------------------------ */
+/*  Heading anchor link component                                      */
+/* ------------------------------------------------------------------ */
+
+function HeadingAnchor({ id, children, ...props }: { id?: string; children: React.ReactNode; [key: string]: unknown }) {
+  return (
+    <>
+      {id && (
+        <a
+          href={`#${id}`}
+          className="heading-anchor"
+          aria-label={`Link to #${id}`}
+          onClick={(e) => {
+            e.preventDefault();
+            const url = `${window.location.origin}${window.location.pathname}#${id}`;
+            navigator.clipboard.writeText(url);
+            // Brief visual feedback
+            const el = e.currentTarget;
+            el.classList.add("heading-anchor-copied");
+            setTimeout(() => el.classList.remove("heading-anchor-copied"), 1500);
+            // Update URL hash without scroll jump
+            history.replaceState(null, "", `#${id}`);
+          }}
+        >
+          #
+        </a>
+      )}
+      {children}
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Image with lightbox (medium-zoom)                                  */
+/* ------------------------------------------------------------------ */
+
+function ZoomableImage({ src, alt, ...props }: { src?: string; alt?: string; [key: string]: unknown }) {
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (!imgRef.current) return;
+    const zoom = mediumZoom(imgRef.current, {
+      background: "rgba(20, 27, 45, 0.9)",
+      margin: 40,
+    });
+    return () => zoom.detach();
+  }, []);
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      ref={imgRef}
+      src={src}
+      alt={alt ?? ""}
+      className="max-w-full rounded-lg cursor-zoom-in"
+      loading="lazy"
+      {...props}
+    />
+  );
+}
+
 /** Render Markdown string to React elements with heading anchors. */
 export function renderMarkdown(content: string): React.ReactElement {
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeSlug, rehypeHighlight]}
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeSlug, rehypeHighlight, rehypeKatex]}
       components={{
         h1: ({ id, children, ...props }) => (
           <h1
             id={id}
             data-slug-anchor={id}
-            className="mt-10 mb-6 text-2xl font-bold text-[var(--text-primary)] scroll-mt-16"
+            className="mt-10 mb-6 text-2xl font-bold text-[var(--text-primary)] scroll-mt-16 group relative"
             {...props}
           >
-            {children}
+            <HeadingAnchor id={id}>{children}</HeadingAnchor>
           </h1>
         ),
         h2: ({ id, children, ...props }) => (
           <h2
             id={id}
             data-slug-anchor={id}
-            className="mt-8 mb-4 text-xl font-semibold text-[var(--text-primary)] scroll-mt-16"
+            className="mt-8 mb-4 text-xl font-semibold text-[var(--text-primary)] scroll-mt-16 group relative"
             {...props}
           >
-            {children}
+            <HeadingAnchor id={id}>{children}</HeadingAnchor>
           </h2>
         ),
         h3: ({ id, children, ...props }) => (
           <h3
             id={id}
             data-slug-anchor={id}
-            className="mt-6 mb-3 text-lg font-medium text-[var(--text-primary)] scroll-mt-16"
+            className="mt-6 mb-3 text-lg font-medium text-[var(--text-primary)] scroll-mt-16 group relative"
             {...props}
           >
-            {children}
+            <HeadingAnchor id={id}>{children}</HeadingAnchor>
           </h3>
         ),
         h4: ({ id, children, ...props }) => (
           <h4
             id={id}
             data-slug-anchor={id}
-            className="mt-5 mb-2 text-base font-medium text-[var(--text-primary)] scroll-mt-16"
+            className="mt-5 mb-2 text-base font-medium text-[var(--text-primary)] scroll-mt-16 group relative"
             {...props}
           >
-            {children}
+            <HeadingAnchor id={id}>{children}</HeadingAnchor>
           </h4>
         ),
         h5: ({ id, children, ...props }) => (
           <h5
             id={id}
             data-slug-anchor={id}
-            className="mt-4 mb-2 text-sm font-medium text-[var(--text-secondary)] scroll-mt-16"
+            className="mt-4 mb-2 text-sm font-medium text-[var(--text-secondary)] scroll-mt-16 group relative"
             {...props}
           >
-            {children}
+            <HeadingAnchor id={id}>{children}</HeadingAnchor>
           </h5>
         ),
         h6: ({ id, children, ...props }) => (
           <h6
             id={id}
             data-slug-anchor={id}
-            className="mt-4 mb-2 text-xs font-medium text-[var(--text-secondary)] scroll-mt-16"
+            className="mt-4 mb-2 text-xs font-medium text-[var(--text-secondary)] scroll-mt-16 group relative"
             {...props}
           >
-            {children}
+            <HeadingAnchor id={id}>{children}</HeadingAnchor>
           </h6>
         ),
         p: ({ children, ...props }) => (
@@ -166,6 +232,9 @@ export function renderMarkdown(content: string): React.ReactElement {
             </CodeBlockWrapper>
           );
         },
+        img: ({ src, alt, ...props }) => (
+          <ZoomableImage src={src} alt={alt} {...props} />
+        ),
         ul: ({ children, ...props }) => (
           <ul className="mb-4 list-disc pl-6 text-[var(--text-primary)]" {...props}>
             {children}

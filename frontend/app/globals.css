@@ -311,3 +311,117 @@ code {
 .hljs-addition      { color: #aff5b4; background: #143d1d; }
 .hljs-section       { color: #d2a8ff; font-weight: bold; }
 .hljs-bullet        { color: #7ee787; }
+
+/* ================================================================ */
+/*  Code block line numbers                                          */
+/* ================================================================ */
+
+.code-block-body {
+  display: flex;
+  overflow-x: auto;
+}
+
+.code-line-numbers {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: 14px 0;
+  padding-left: 12px;
+  padding-right: 10px;
+  text-align: right;
+  user-select: none;
+  border-right: 1px solid var(--border);
+  background: rgba(15, 23, 41, 0.5);
+}
+
+.code-line-number {
+  font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  opacity: 0.35;
+  min-width: 2ch;
+}
+
+.code-block-pre {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ================================================================ */
+/*  Heading anchor links                                              */
+/* ================================================================ */
+
+.heading-anchor {
+  display: inline-block;
+  margin-left: -1.25em;
+  padding-right: 0.25em;
+  width: 1.25em;
+  text-align: center;
+  color: var(--text-secondary);
+  opacity: 0;
+  text-decoration: none !important;
+  font-weight: 400;
+  transition: opacity 0.15s, color 0.15s;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.heading-anchor:hover {
+  color: var(--accent) !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
+}
+
+.heading-anchor-copied {
+  color: var(--success) !important;
+  opacity: 1 !important;
+}
+
+h1:hover .heading-anchor,
+h2:hover .heading-anchor,
+h3:hover .heading-anchor,
+h4:hover .heading-anchor,
+h5:hover .heading-anchor,
+h6:hover .heading-anchor {
+  opacity: 0.5;
+}
+
+/* ================================================================ */
+/*  KaTeX math styling                                               */
+/* ================================================================ */
+
+.katex-display {
+  margin: 1.2em 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5em 0;
+}
+
+.katex-display > .katex {
+  white-space: nowrap;
+}
+
+.katex {
+  font-size: 1.05em;
+}
+
+/* Inline math */
+p > .katex,
+li > .katex {
+  font-size: 1em;
+}
+
+/* ================================================================ */
+/*  Medium-zoom overrides                                            */
+/* ================================================================ */
+
+.medium-zoom-overlay {
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+.medium-zoom-image--opened {
+  z-index: 10000;
+  border-radius: 8px;
+}

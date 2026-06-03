@@ -32,11 +32,29 @@ export default async function ArticlePage({ params }: PageProps) {
     notFound();
   }
 
+  // Fetch article list for prev/next navigation
+  let prevArticle: { slug: string; title: string } | null = null;
+  let nextArticle: { slug: string; title: string } | null = null;
+  try {
+    const list = await fetchArticleList();
+    const idx = list.articles.findIndex((a) => a.slug === slug);
+    if (idx > 0) {
+      prevArticle = { slug: list.articles[idx - 1].slug, title: list.articles[idx - 1].title };
+    }
+    if (idx >= 0 && idx < list.articles.length - 1) {
+      nextArticle = { slug: list.articles[idx + 1].slug, title: list.articles[idx + 1].title };
+    }
+  } catch {
+    // Silently ignore — prev/next just won't show
+  }
+
   return (
     <ArticlePageClient
       slug={article.slug}
       createdAt={article.created_at}
       rawContent={article.raw_content}
+      prevArticle={prevArticle}
+      nextArticle={nextArticle}
     />
   );
 }

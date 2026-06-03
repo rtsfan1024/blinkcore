@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useCallback, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 interface CodeBlockWrapperProps {
   /** Language label extracted from code className (e.g. "typescript", "rust") */
@@ -9,12 +9,31 @@ interface CodeBlockWrapperProps {
   children: ReactNode;
 }
 
+/** Recursively extract all text from React children. */
+function extractText(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(extractText).join("");
+  if (node && typeof node === "object" && "props" in node) {
+    const props = node.props as { children?: ReactNode };
+    if (props.children) return extractText(props.children);
+  }
+  return "";
+}
+
 export default function CodeBlockWrapper({
   language,
   children,
 }: CodeBlockWrapperProps) {
   const preRef = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
+  const [lineCount, setLineCount] = useState(0);
+
+  // Count lines from the actual rendered code text
+  useEffect(() => {
+    const text = extractText(children);
+    const count = text.split("\n").length;
+    setLineCount(count);
+  }, [children]);
 
   const handleCopy = useCallback(async () => {
     const codeEl = preRef.current?.querySelector("code");
@@ -63,9 +82,18 @@ export default function CodeBlockWrapper({
           )}
         </button>
       </div>
-      <pre ref={preRef} className="code-block-pre">
-        {children}
-      </pre>
+      <div className="code-block-body">
+        <div className="code-line-numbers" aria-hidden="true">
+          {Array.from({ length: lineCount }, (_, i) => (
+            <span key={i + 1} className="code-line-number">
+              {i + 1}
+            </span>
+          ))}
+        </div>
+        <pre ref={preRef} className="code-block-pre">
+          {children}
+        </pre>
+      </div>
     </div>
   );
 }
